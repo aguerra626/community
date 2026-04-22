@@ -27,6 +27,12 @@ bar source: user.vscode("workbench.view.scm")
 bar test: user.vscode("workbench.view.testing.focus")
 bar switch: user.vscode("workbench.action.toggleSidebarVisibility")
 
+# Claude Code
+bar claude: user.vscode("claude-vscode.sidebar.open")
+focus claude: user.vscode("claude-vscode.focus")
+claude new tab: user.vscode("claude-vscode.editor.open")
+claude open: user.vscode("claude-vscode.editor.openLast")
+
 # Symbol search
 symbol hunt [<user.text>]:
     user.vscode("workbench.action.gotoSymbol")
