@@ -4,6 +4,7 @@ This is a living document of voice commands for each application in your daily w
 
 ## Table of Contents
 
+- [Dictation Mode — Always Available](#dictation-mode--always-available)
 - [General — Works Everywhere](#general--works-everywhere)
   - [Switching Between Applications](#switching-between-applications)
   - [Typing Text](#typing-text)
@@ -40,6 +41,83 @@ This is a living document of voice commands for each application in your daily w
   - [Calls & Meetings](#calls--meetings)
   - [Calendar](#calendar)
 - [Typical Workflow Example](#typical-workflow-example)
+
+---
+
+## Dictation Mode — Always Available
+
+Talon starts in **dictation mode** by default. Everything you say is typed as text. The commands below "punch through" — they work without switching to command mode.
+
+> **Tip:** You can still say `"command mode"` anytime to access the full command set, and `"dictation mode"` to come back.
+
+### App Switching (Dictation)
+
+| You say | What happens |
+|---------|-------------|
+| `"focus code"` | Switch to VSCode |
+| `"focus edge"` | Switch to Edge |
+| `"focus teams"` | Switch to Teams |
+| `"focus obsidian"` | Switch to Obsidian |
+| `"focus last"` | Switch to previous app (Alt-Tab) |
+
+### Search (Dictation)
+
+| You say | What happens |
+|---------|-------------|
+| `"hunt this"` | Open find/search in current app |
+| `"hunt this <text>"` | Search for specific text |
+
+### Claude Code Launcher (Dictation)
+
+| You say | What happens |
+|---------|-------------|
+| `"open talon claude"` | Open PowerShell in the Talon directory and launch Claude Code CLI |
+
+### Clipboard & Keys (Dictation)
+
+| You say | What happens |
+|---------|-------------|
+| `"copy that"` | Copy |
+| `"cut that"` | Cut |
+| `"paste that"` | Paste |
+| `"undo that"` | Undo |
+| `"redo that"` | Redo |
+| `"select all"` | Select all |
+| `"slap"` | Enter |
+| `"tab key"` | Tab |
+| `"wipe"` | Backspace |
+| `"delete"` | Delete |
+
+### Code Formatters (Dictation)
+
+These work exactly like command mode — no prefix needed:
+
+| You say | Output | Use for |
+|---------|--------|---------|
+| `"snake safety stock target"` | `safety_stock_target` | SQL columns, Python vars |
+| `"camel get order status"` | `getOrderStatus` | JavaScript vars |
+| `"hammer order service"` | `OrderService` | Class names |
+| `"dotted bdf prod bdf basbi common"` | `bdf.prod.bdf.basbi.common` | Schema paths |
+| `"constant max retries"` | `MAX_RETRIES` | Constants |
+| `"kebab my component"` | `my-component` | CSS, CLI flags |
+| `"smash varchar"` | `varchar` | No separators |
+| `"string hello world"` | `'hello world'` | Single-quoted |
+| `"dub string hello world"` | `"hello world"` | Double-quoted |
+| `"snake that"` | Reformat selection as snake_case | Reformat existing text |
+
+### Built-in Dictation Commands
+
+These are built into Talon's dictation mode (not custom):
+
+| You say | What happens |
+|---------|-------------|
+| `"cap"` | Capitalize next word |
+| `"no cap"` | Don't capitalize next word |
+| `"no space"` | Don't add space before next word |
+| `"scratch that"` | Delete last phrase |
+| `"select that"` | Re-select last phrase |
+| `"go up/down <n> lines"` | Navigate up/down |
+| `"go line start"` / `"go line end"` | Jump to start/end of line |
 
 ---
 

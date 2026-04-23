@@ -10,6 +10,8 @@ This file documents all changes made to the Talon Community repo to support Alfr
 - [3. Word Replacements — Speech Correction](#3-word-replacements--speech-correction)
 - [4. You Don't Need to Hardcode Table Names](#4-you-dont-need-to-hardcode-table-names)
 - [5. Claude Code Voice Commands](#5-claude-code-voice-commands)
+- [6. Dictation-First Mode — Stay in Dictation Full-Time](#6-dictation-first-mode--stay-in-dictation-full-time)
+- [7. Quick-Launch Claude Code in the Talon Directory](#7-quick-launch-claude-code-in-the-talon-directory)
 - [Directory Reference](#directory-reference)
 - [Adding New Customizations](#adding-new-customizations)
 
@@ -33,6 +35,38 @@ Talon automatically loads every `.talon`, `.py`, `.talon-list`, and `.csv` file 
 
 **What was added:**
 ```
+# Database / ERP acronyms
+SQL
+sequel: SQL
+ERP
+my ERP: my ERP
+M P S: MPS
+W M S: WMS
+I M S: IMS
+G L: GL
+M E S: MES
+P P C: PPC
+H C M: HCM
+P L M: PLM
+
+# Git - Talon hears "get" instead of "git"
+git
+git status: git status
+git commit: git commit
+git push: git push
+git pull: git pull
+git stash: git stash
+git diff: git diff
+git merge: git merge
+git branch: git branch
+git clone: git clone
+git fetch: git fetch
+git log: git log
+git checkout: git checkout
+git rebase: git rebase
+git init: git init
+git add: git add
+
 # Tools
 Claude
 Claude Code: Claude Code
@@ -51,9 +85,17 @@ qty
 D B T: dbt
 shipset
 shipsets
+
+# Blue Origin programs
+gs one: GS1
+gs two: GS2
+glen stage one: Glenn Stage 1
+glen stage two: Glenn Stage 2
 ```
 
-**Why:** These are supply chain and analytics terms that Talon's speech engine doesn't know. By adding them, you can say things like "snake B I T model baseline" and get `bit_model_baseline`. The spoken form "B I T" (spelled out) maps to the written form `bit`.
+**Why the git entries:** Talon hears "git" as "get" because "get" is a common English word. Adding `git` as a standalone word helps, but the multi-word phrases (`git status: git status`) are the real fix — they tell Talon to treat "git status" as a known phrase and write it correctly. We can't use words_to_replace.csv here because replacing "get" globally would break actual uses of the word "get".
+
+**Why the domain terms:**  These are supply chain and analytics terms that Talon's speech engine doesn't know. By adding them, you can say things like "snake B I T model baseline" and get `bit_model_baseline`. The spoken form "B I T" (spelled out) maps to the written form `bit`.
 
 **How to add more:** Open the file, add a new line at the bottom following the same format. Talon reloads automatically.
 
@@ -95,6 +137,23 @@ ss,safety stock
 teams,beams
 Claude,clod
 Talon,talent
+SQL,sol
+SQL,sequel
+ERP,ARP
+ERP,Earp
+ERP,ape
+MPS,ps
+WMS,WM
+IMS,sims
+BOM,bon
+PLM,pam
+GL,gel
+MES,Ms
+MES,am yes
+mBOM,embalm
+LLM,Allam
+kanban,can ban
+kanban,con ban
 ```
 
 **Why:** Talon's speech engine consistently mishears certain words. These were discovered during actual use:
@@ -149,6 +208,90 @@ claude open: user.vscode("claude-vscode.editor.openLast")
 
 ---
 
+## 6. Dictation-First Mode — Stay in Dictation Full-Time
+
+**Files changed:**
+- `core/modes/dictation_shortcuts.talon` (new)
+- `settings.talon` (modified)
+
+**Problem:** Constantly switching between dictation mode and command mode is a pain. You just want to talk, switch apps, search, and keep going without toggling modes.
+
+**Solution:** Two changes:
+
+1. **Default startup mode set to dictation** — In `settings.talon`, changed `user.initial_mode` from `"command"` to `"dictation"`. Talon now starts in dictation mode so you can immediately start typing by voice.
+
+2. **Punch-through commands** — Created `core/modes/dictation_shortcuts.talon` with essential commands that work without leaving dictation mode:
+
+```
+# App switching
+focus code         → Switch to VSCode
+focus edge         → Switch to Edge
+focus teams        → Switch to Teams
+focus obsidian     → Switch to Obsidian
+focus last         → Switch to previous app (Alt-Tab equivalent)
+
+# Search
+hunt this          → Open find/search in current app
+hunt this <text>   → Search for specific text
+
+# VSCode navigation (keyboard shortcuts, since vscode actions aren't available in dictation)
+focus editor       → Jump back to code editor (Ctrl+1 = focus first editor group)
+focus claude       → Focus Claude Code input (via command palette)
+bar claude         → Open Claude Code sidebar (via command palette)
+focus terminal     → Focus VSCode integrated terminal (Ctrl+`)
+focus talon claude → Switch to the external PowerShell window running Claude Code CLI
+tab next           → Next tab (Ctrl+PageDown)
+tab last           → Previous tab (Ctrl+PageUp)
+
+# Clipboard & editing
+copy that / cut that / paste that / undo that / redo that / select all
+
+# Essential keys
+slap (Enter) / tab key (Tab) / wipe (Backspace) / delete (Delete)
+```
+
+**Why keyboard shortcuts for Claude Code?** The `user.vscode()` action is only available in command mode context. In dictation mode, we use `key(ctrl-shift-p)` to open the command palette and type the command name — same result, works from any mode.
+
+**Code formatters in dictation mode:** The command-mode formatters (`snake`, `camel`, `dotted`, etc.) are also wired in so you can say `"snake safety stock target"` directly without switching modes or saying "formatted" first. This is done by re-declaring the `<user.format_code>` capture rules under the `mode: dictation` context. The dictation-mode versions prepend a space before the formatted text so it flows naturally with surrounding dictation (e.g. "for snake ai engineering" produces `for ai_engineering`, not `forai_engineering`).
+
+**How to add more punch-through commands:** Edit `core/modes/dictation_shortcuts.talon`. Any command defined under `mode: dictation` will be available while dictating. You can still say `"command mode"` anytime to access the full command set.
+
+---
+
+## 7. Quick-Launch Claude Code in the Talon Directory
+
+**File:** `core/modes/dictation_shortcuts.talon`
+
+**What was added:**
+```
+open talon claude:
+    user.system_command_nb("start powershell -NoExit -Command \"cd 'C:\\Users\\aguerra3\\AppData\\Roaming\\talon\\user\\community'; claude\"")
+```
+
+**Why:** The Talon community directory is buried at `C:\Users\aguerra3\AppData\Roaming\talon\user\community` — not easy to remember or navigate to. This command opens a PowerShell window, `cd`s into that directory, and launches the Claude Code CLI so you can start working on Talon config immediately.
+
+**How it works:** Uses the existing `user.system_command_nb` action (defined in `core/system_command.py`) to run a non-blocking shell command. The `start powershell -NoExit` launches a new PowerShell window that stays open after `claude` exits, so you can keep using the terminal.
+
+**Voice trigger:** Say `"open talon claude"` from dictation mode (or command mode).
+
+---
+
+## 8. App Name Overrides — Reliable App Switching
+
+**File:** `core/app_switcher/app_name_overrides.windows.csv`
+
+**What was added:**
+```csv
+code, Code.exe
+powershell, powershell.exe
+```
+
+**Why:** The app switcher auto-generates spoken forms from running app names, but some names don't generate clean matches. "Visual Studio Code" has "visual" and "studio" in the exclusion list, which can leave "code" unreliable. Adding explicit overrides guarantees the mapping.
+
+**Also added:** `focus talon claude` command in `core/windows_and_tabs/window_management.talon` — switches to the PowerShell window where Claude Code CLI is running. This is a command-mode command (say `"command mode"` first if in dictation).
+
+---
+
 ## Directory Reference
 
 ```
@@ -160,6 +303,7 @@ community/
 ├── core/formatters/
 │   ├── formatters.py                       ← formatter logic (snake, camel, etc.)
 │   └── code_formatter.talon-list           ← spoken names for formatters
+├── core/modes/dictation_shortcuts.talon    ← commands that work in dictation mode
 ├── CUSTOMIZATIONS.md                       ← this file
 └── VOICE_COMMANDS.md                       ← application voice command reference
 ```

@@ -11,17 +11,54 @@ VPN
 DNS
 Minecraft
 
+# Git - Talon hears "get" instead of "git"
+git
+git status: git status
+git commit: git commit
+git push: git push
+git pull: git pull
+git stash: git stash
+git diff: git diff
+git merge: git merge
+git branch: git branch
+git clone: git clone
+git fetch: git fetch
+git log: git log
+git checkout: git checkout
+git rebase: git rebase
+git init: git init
+git add: git add
+
+# Database / ERP acronyms
+SQL
+sequel: SQL
+ERP
+my ERP: my ERP
+M P S: MPS
+W M S: WMS
+I M S: IMS
+G L: GL
+M E S: MES
+P P C: PPC
+H C M: HCM
+P L M: PLM
+mBOM
+
 # Tools
 Claude
 Claude Code: Claude Code
 Talon
+agentic
+A I: AI
+LLM
+kanban
 
 # Domain acronyms - supply chain / analytics
 B I T: bit
 S S: ss
 mit S S: mitss
-M R P: mrp
-B O M: bom
+M R P: MRP
+B O M: BOM
 B D F: bdf
 basbi
 cume
@@ -29,3 +66,9 @@ qty
 D B T: dbt
 shipset
 shipsets
+
+# Blue Origin programs
+gs one: GS1
+gs two: GS2
+glen stage one: Glenn Stage 1
+glen stage two: Glenn Stage 2
